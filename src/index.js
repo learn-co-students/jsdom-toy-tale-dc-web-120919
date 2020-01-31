@@ -56,15 +56,19 @@ function renderAllToys(){
     const likeStatus = document.createElement('p')
     likeStatus.className ="like-status"
     likeStatus.innerText = toy.likes
+    
     toyCard.appendChild(likeStatus)
-
+    
+    
     
     
     const likeBtn = document.createElement('button')
     
-    likeBtn.addEventListener('click', () => console.log("click"))
+    likeBtn.addEventListener('click', likeCounter)
     likeBtn.className ="like-btn"
     likeBtn.innerHTML = "Like"
+    likeBtn.dataset.likes = toy.likes
+
     toyCard.appendChild(likeBtn)
 
 
@@ -78,6 +82,12 @@ function renderAllToys(){
     
     
     
+  }
+
+  function likeCounter(e){
+    e.currentTarget.dataset.likes
+debugger
+
   }
   
   
