@@ -47,6 +47,12 @@
       "name": "Little Green Men",
       "image": "http://www.pngmart.com/files/3/Toy-Story-Alien-PNG-File.png",
       "likes": -2
+    },
+    {
+      "name": "baby Yoda",
+      "image": "https://s7d2.scene7.com/is/image/TWCNews/n13_disney_baby_yoda_plush_toy",
+      "likes": 0,
+      "id": 10
     }
   ]
 }

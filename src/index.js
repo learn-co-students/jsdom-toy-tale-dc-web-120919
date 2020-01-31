@@ -13,9 +13,35 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   })
 
-  getToys();
+  getToys(); //displays all toys when DOM is loaded 
 
+  const formButton = getToyForm();
+  formButton.addEventListener('submit', newToyHandler)
 })
+
+function getToyForm(){
+  // return document.getElementsByClassName('add-toy-form')
+  return document.querySelector('.add-toy-form')
+}
+
+function newToyHandler(event){
+  event.preventDefault();
+  console.log(event);
+  let toyName = event.target.name.value;
+  let toyImage = event.target.image.value;
+  let newToy = {name: toyName, image: toyImage, likes: 0}
+  //post this info to the JSON server 
+  let newPost = fetch('http://localhost:3000/toys', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(newToy)
+  }).then(response => response.json())
+    .then(newToy => buildToyCard(newToy));
+  
+}
 
 function getToyCollection(){
   return document.getElementById('toy-collection');
