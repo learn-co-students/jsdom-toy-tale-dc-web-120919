@@ -61,5 +61,17 @@ function buildToyCard(toy) {
     
 function newForm(event) { 
    event.preventDefault()
-  
+   let newToyName = event.target.name.value 
+   let newToyImage = event.target.image.value
+    let newToy = {name: newToyName, image: newToyImage}
+    
+      fetch('http://localhost:3000/toys',{ 
+        method: "POST", 
+        headers: { 
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newToy)
+      }).then(response => response.json())
+      .then(toy => buildToyCard(toy))
+
 }
