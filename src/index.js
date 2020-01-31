@@ -74,27 +74,30 @@ function renderAllToys(){
 
 
     toyCollection.appendChild(toyCard)
-
     // When a user clicks on a toy's like button, two things should happen:
     //   * Conditional increase to the toy's like count
     //   * A patch request sent to the server at `http://localhost:3000/toys/:id`
     // * updating the number of likes that the specific toy has
   }
 
+
+
   function likeCounter(e){
     let toyId = e.target.dataset.id
     let toyLikes = e.target.dataset.likes
-    let toyInt = parseInt(toyLikes, 10);
-    fetch("http://localhost:3000/toys" + toyId, {
+    let toyInt = parseInt(toyLikes);
+    let toyParent = e.target.parentElement
+    let likeToDom = toyParent.querySelector('p')
+    fetch("http://localhost:3000/toys/" + toyId, {
       method: "PATCH",
-
-    headers: {
+      headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify()
+    body: JSON.stringify({likes: toyInt+1})
       }).then(resp => resp.json())
         .then(data => {
-          let newToyLike = ++toyInt
-          console.log(newToyLike)
+
+          return likeToDom.innerText = data.likes
+
         })
 }
