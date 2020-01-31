@@ -57,6 +57,8 @@ function buildToyCard(toy) {
   likeButton.classList += 'like-btn'
   likeButton.innerText = "Like <3"
     card.appendChild(likeButton)
+  likeButton.dataset.id = toy.id
+  likeButton.addEventListener("click", likeToy)
 }
     
 function newForm(event) { 
@@ -75,4 +77,25 @@ function newForm(event) {
       }).then(response => response.json())
       .then(toy => buildToyCard(toy))
 
+}
+
+
+function likeToy(event) {
+  console.log(event)
+  debugger
+  let newLikes = {likes: incrementHandler(event)}
+  let cardId = event.target.dataset.id 
+  fetch("http://localhost:3000/toys/" + cardId, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newLikes)
+
+  }).then(response => response.json()).then(json => console.log(json))
+
+}
+
+function incrementHandler(event){
+  console.log(event)
 }
