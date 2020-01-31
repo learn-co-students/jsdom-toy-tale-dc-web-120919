@@ -91,8 +91,10 @@ function likeToy(event) {
     },
     body: JSON.stringify(newLikes)
 
-  }).then(response => response.json()).then(json => console.log(json.likes))
-  window.location.reload()
+  }).then(response => response.json())
+  .then(json => 
+    event.target.previousElementSibling.innerText = `${json.likes} likes`)
+  //window.location.reload()
 
 }
 
