@@ -3,7 +3,7 @@
 You've got a friend in need! Your friend Andy recently misplaced all their toys!
 Help Andy recover their toys and get the toys back in the toy collection.
 
-## Create Your Server
+<!-- ## Create Your Server
 
 All of the toy data is stored in the `db.json` file. You'll want to access this
 data using a JSON server. In order to do this, run the following two commands:
@@ -12,12 +12,14 @@ data using a JSON server. In order to do this, run the following two commands:
    * `json-server --watch db.json`
    
 This will create a server storing all of our lost toy data with restful routes
-at `http://localhost:3000/toys`. You can also check out
-`http://localhost:3000/toys/:id`
+at `http://localhost:3000/toys`. You can also check out -->
+<!-- `http://localhost:3000/toys/:id` -->
 
 ## Fetch Andy's Toys
 
 On the `index.html` page, there is a `div` with the `id` "toy-collection."
+-as a user we need to see a full list of toys
+- when the page load we want to make a get fetch and render toy cards to the DOM
 
 When the page loads, make a 'GET' request to fetch all the toy objects. With the
 response data, make a `<div class="card">` for each toy and add it to the
