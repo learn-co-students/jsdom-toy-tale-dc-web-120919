@@ -9,6 +9,7 @@ let addToy = false
 
 document.addEventListener("DOMContentLoaded", ()=>{
   renderAllToys()
+  
   const addBtn = document.querySelector('#new-toy-btn')
   const toyForm = document.querySelector('.container')
   addBtn.addEventListener('click', () => {
@@ -41,7 +42,6 @@ function renderAllToys(){
     const toyCard= document.createElement('div')
     toyCard.className = "card"
     
-    toyCollection.appendChild(toyCard)
     
     const toyName = document.createElement('h2')
     toyName.className = "toy-name"
@@ -52,10 +52,23 @@ function renderAllToys(){
     toyImg.className = "toy-avatar"
     toyImg.src = toy.image
     toyCard.appendChild(toyImg)
+  
+    const likeStatus = document.createElement('p')
+    likeStatus.className ="like-status"
+    likeStatus.innerText = toy.likes
+    toyCard.appendChild(likeStatus)
+
+    
     
     const likeBtn = document.createElement('button')
+    
+    likeBtn.addEventListener('click', () => console.log("click"))
+    likeBtn.className ="like-btn"
     likeBtn.innerHTML = "Like"
     toyCard.appendChild(likeBtn)
+
+
+    toyCollection.appendChild(toyCard)
     
     // When a user clicks on a toy's like button, two things should happen:
     //   * Conditional increase to the toy's like count
@@ -67,7 +80,7 @@ function renderAllToys(){
     
   }
   
-
+  
 
 
 
