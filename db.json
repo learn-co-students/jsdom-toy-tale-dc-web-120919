@@ -71,6 +71,18 @@
       "image": "https://vignette.wikia.nocookie.net/p__/images/8/88/Jessie_Toy_Story_3.png/revision/latest?cb=20161023024601&path-prefix=protagonist",
       "likes": "0",
       "id": 12
+    },
+    {
+      "name": "Anna",
+      "image": "https://mpng.subpng.com/20180131/cpw/kisspng-munchkin-cat-scottish-fold-kitten-clip-art-kitten-png-clipart-5a71f8a68acdc7.1720976615174186625686.jpg",
+      "likes": 1,
+      "id": 13
+    },
+    {
+      "name": "Amia",
+      "image": "https://mpng.subpng.com/20180131/cpw/kisspng-munchkin-cat-scottish-fold-kitten-clip-art-kitten-png-clipart-5a71f8a68acdc7.1720976615174186625686.jpg",
+      "likes": 1,
+      "id": 14
     }
   ]
 }

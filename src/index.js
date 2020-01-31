@@ -67,7 +67,7 @@ function newForm(event) {
    let newToyImage = event.target.image.value
    let newToyLikes = event.target.likes
     let newToy = {name: newToyName, image: newToyImage, likes: "0"}
-    
+    event.target.reset()
       fetch('http://localhost:3000/toys',{ 
         method: "POST", 
         headers: { 
