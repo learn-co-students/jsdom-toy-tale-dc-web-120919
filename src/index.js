@@ -8,21 +8,48 @@
 let addToy = false
 
 document.addEventListener("DOMContentLoaded", ()=>{
+  
   renderAllToys()
+  toyForm().addEventListener('submit', newToyHandler)
 
   const addBtn = document.querySelector('#new-toy-btn')
-  const toyForm = document.querySelector('.container')
+  const formContain = document.querySelector('.container')
   addBtn.addEventListener('click', () => {
     // hide & seek with the form
     addToy = !addToy
     if (addToy) {
-      toyForm.style.display = 'block'
+      formContain.style.display = 'block'
     } else {
-      toyForm.style.display = 'none'
+      formContain.style.display = 'none'
     }
   })
 
 })
+
+
+function toyForm() {
+  return document.querySelector('form')
+}
+
+
+function newToyHandler(event){
+  event.preventDefault()
+
+  let newName = event.target.name.value
+  let newImg = event.target.image.value
+ 
+
+  let newToy = {name: newName, image: newImg, likes:0}
+  fetch("http://localhost:3000/toys", {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newToy)
+  }).then(response => response.json())
+  .then(newToy =>buildToyCard(newToy))
+
+}
 
 // as a user we need to see a full list of toys
 // when the page load we want to make a get fetch and render toy cards to the DOM
@@ -41,6 +68,7 @@ function renderAllToys(){
     const toyCollection = document.getElementById('toy-collection')
     const toyCard= document.createElement('div')
     toyCard.className = "card"
+    toyCard.dataset.id = toy.id
 
 
     const toyName = document.createElement('h2')
@@ -78,16 +106,27 @@ function renderAllToys(){
     //   * Conditional increase to the toy's like count
     //   * A patch request sent to the server at `http://localhost:3000/toys/:id`
     // * updating the number of likes that the specific toy has
+    const deleteBtn = document.createElement('button')
+    deleteBtn.dataset.id = toy.id
+    deleteBtn.dataset = toy
+
+
+    deleteBtn.className = 'delete'
+    deleteBtn.innerText ="DIE"
+    deleteBtn.addEventListener("click", dieToy)
+    toyCard.appendChild(deleteBtn)
+
   }
 
 
 
   function likeCounter(e){
     let toyId = e.target.dataset.id
-    let toyLikes = e.target.dataset.likes
-    let toyInt = parseInt(toyLikes);
+    // let toyLikes = e.target.dataset.likes
     let toyParent = e.target.parentElement
     let likeToDom = toyParent.querySelector('p')
+    let toyLikes = likeToDom.innerText
+    let toyInt = parseInt(toyLikes);
     fetch("http://localhost:3000/toys/" + toyId, {
       method: "PATCH",
       headers: {
@@ -96,8 +135,23 @@ function renderAllToys(){
     body: JSON.stringify({likes: toyInt+1})
       }).then(resp => resp.json())
         .then(data => {
+          
 
-          return likeToDom.innerText = data.likes
+          likeToDom.innerText = data.likes
 
         })
+}
+
+function dieToy(e) {
+
+  let card = e.target.parentElement
+
+
+  let toyId = e.currentTarget.dataset.id
+  
+  fetch("http://localhost:3000/toys/" + toyId, {
+    method: 'DELETE',
+  }).then(response => response.json()).then(json => console.log(json))
+  debugger
+  card.remove()
 }
