@@ -75,18 +75,17 @@ function currentLikes(event){
   let toyID = parseInt(currentLikes);
 
   //fetches the current likes 
-  let likeCounter = "hi";
-  
   fetch(`http://localhost:3000/toys/${toyID}`)
   .then(response => response.json())
   .then(toy => {
     console.log(toy);
     // debugger;
-    likeCounter = toy.likes;
+    let likeCounter = toy.likes;
     let toyID = toy.id;
     likeCounter++;
+    //updates the likes
     patchLikes(likeCounter, toyID);
-
+    
   });
 
   // let stringLikes = String(likeCounter);
@@ -105,7 +104,14 @@ function patchLikes(likeCounter, toyID){
       },
     })
     .then(response => response.json())
-    .then(json => console.log(json))
+    .then(json => {console.log(json)
+      let currentLikes = json.likes;
+      let likeP = document.getElementById(`like-${toyID}`)
+      likeP.innerText = `${currentLikes} Likes`
+      // debugger;
+      
+    })
+    // window.location.reload();
 }
  
 
