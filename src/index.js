@@ -76,13 +76,12 @@ function newForm(event) {
         body: JSON.stringify(newToy)
       }).then(response => response.json())
       .then(toy => buildToyCard(toy))
-
+      
 }
 
 
 function likeToy(event) {
   console.log(event)
-  debugger
   let newLikes = {likes: incrementHandler(event)}
   let cardId = event.target.dataset.id 
   fetch("http://localhost:3000/toys/" + cardId, {
@@ -92,10 +91,18 @@ function likeToy(event) {
     },
     body: JSON.stringify(newLikes)
 
-  }).then(response => response.json()).then(json => console.log(json))
+  }).then(response => response.json()).then(json => console.log(json.likes))
+  window.location.reload()
 
 }
 
 function incrementHandler(event){
-  console.log(event)
+   let  hope = event.target.previousElementSibling.innerText.split(" ")
+  let please  =  parseInt(hope[0])
+  
+  return ++please
+  
+   
+
+  
 }
