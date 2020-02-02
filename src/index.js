@@ -152,6 +152,6 @@ function dieToy(e) {
   fetch("http://localhost:3000/toys/" + toyId, {
     method: 'DELETE',
   }).then(response => response.json()).then(json => console.log(json))
-  debugger
+  
   card.remove()
 }
