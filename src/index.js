@@ -108,7 +108,7 @@ function patchLikes(likeCounter, toyID){
       let currentLikes = json.likes;
       let likeP = document.getElementById(`like-${toyID}`)
       likeP.innerText = `${currentLikes} Likes`
-      // debugger;
+ 
       
     })
     // window.location.reload();
