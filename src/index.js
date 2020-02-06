@@ -1,5 +1,9 @@
 let addToy = false
-document.addEventListener("DOMContentLoaded", ()=>{
+
+document.addEventListener("DOMContentLoaded",function(){
+  console.log("connected")
+  fetchAllToys()
+  getForm().addEventListener("submit",newToyHandler)
   const addBtn = document.querySelector('#new-toy-btn')
   const toyForm = document.querySelector('.container')
   addBtn.addEventListener('click', () => {
@@ -10,104 +14,117 @@ document.addEventListener("DOMContentLoaded", ()=>{
     } else {
       toyForm.style.display = 'none'
     }
-  })
-  getToys(); //displays all toys when DOM is loaded 
-  const formButton = getToyForm();
-  formButton.addEventListener('submit', newToyHandler)
 })
-function getToyForm(){
-  // return document.getElementsByClassName('add-toy-form')
-  return document.querySelector('.add-toy-form')
+})
+function fetchAllToys(){
+  fetch("http://localhost:3000/toys")
+  .then(r => r.json())
+  .then(toyArray=>{
+    toyArray.forEach(toy=>buildToyCard(toy))
+})
 }
-function getToyCollection(){
-  return document.getElementById('toy-collection');
+function getForm(){
+  return document.querySelector(".add-toy-form")
 }
-function getToys(){
-  fetch('http://localhost:3000/toys')
-  .then(response => response.json())
-  .then(toys => {
-    console.log(toys);
-    toys.forEach(toy => buildToyCard(toy));
-  })
+
+function getDiv(){
+  return document.getElementById("toy-collection")
 }
 function buildToyCard(toy){
-  let toyGallery = getToyCollection();
-  let toyCard = document.createElement('div');
-  toyCard.classList += "card";
-  toyCard.dataset.id = toy.id;
-  let newName = document.createElement('h2');
-  newName.innerHTML = toy.name;
-  let newImage = document.createElement('img');
-  newImage.className = "toy-avatar";
-  newImage.src = toy.image;
-  let newLikes = document.createElement('p');
-  newLikes.innerText = `${toy.likes} Likes`;
-  newLikes.dataset.id = `like-${toy.id}`;
-  newLikes.id = `like-${toy.id}`;
-  let newButton = document.createElement('button');
-  newButton.className = 'like-btn';
-  newButton.innerText = 'Like';
-  newButton.dataset.id = toy.id;
-  newButton.id = `like-button-${toy.id}`;
-  toyGallery.appendChild(toyCard);
-  toyCard.appendChild(newName);
-  toyCard.appendChild(newImage);
-  toyCard.appendChild(newLikes);
-  toyCard.appendChild(newButton);
-  newButton.addEventListener('click', currentLikes);
+  let div = getDiv()
+  let toyCard = document.createElement('div')
+  toyCard.className = "card"
+  toyCard.id = toy.id
+  
+  let toyName = document.createElement('h2')
+  toyName.innerText = toy.name
+
+  let toyImage = document.createElement('img')
+  toyImage.className = "toy-avatar"
+  toyImage.src = toy.image
+
+  let likePar = document.createElement('p')
+  likePar.innerText = `${toy.likes} like(s)`
+  
+  let likeBtn = document.createElement('button')
+  likeBtn.className = "like-btn"
+  likeBtn.innerText = "Like "
+  likeBtn.dataset.id = `${toy.id}`
+  likeBtn.addEventListener("click",likeToyHandler)
+
+  let deleteBtn = document.createElement('button')
+  deleteBtn.className = "delete-btn"
+  deleteBtn.innerText = "Delete me!" 
+  deleteBtn.dataset.id = toyCard.id
+  deleteBtn.addEventListener("click",deleteToyHandler)
+
+  toyCard.append(toyName,toyImage,likePar,likeBtn,deleteBtn)
+  div.appendChild(toyCard)
 }
-function currentLikes(event){
-  console.log("I'm clicked!");
-  let currentLikes = event.target.dataset.id;
-  let toyID = parseInt(currentLikes);
-  //fetches the current likes 
-  fetch(`http://localhost:3000/toys/${toyID}`)
-  .then(response => response.json())
-  .then(toy => {
-    console.log(toy);
-    // debugger;
-    let likeCounter = toy.likes;
-    let toyID = toy.id;
-    likeCounter++;
-    //updates the likes
-    patchLikes(likeCounter, toyID);
-  });
-  // let stringLikes = String(likeCounter);
-}
-function patchLikes(likeCounter, toyID){
-  fetch(`http://localhost:3000/toys/${toyID}`, {
-    method: 'PATCH',
-    body: JSON.stringify({
-      likes: likeCounter
-       }), //variable likes here
+
+function newToyHandler(e){
+    e.preventDefault()
+    let newToyName = e.target.name.value
+    let newToyImage = e.target.image.value
+    let newToy ={name: newToyName,image: newToyImage,likes: 0}
+    fetch("http://localhost:3000/toys",{
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
+        "Content-Type":"application/json"
       },
-    })
-    .then(response => response.json())
-    .then(json => {console.log(json)
-      let currentLikes = json.likes;
-      let likeP = document.getElementById(`like-${toyID}`)
-      likeP.innerText = `${currentLikes} Likes`
-      // debugger;
-    })
-    // window.location.reload();
+      body: JSON.stringify(newToy)
+}).then(res => res.json())
+  .then(toy =>buildToyCard(toy))
+  e.target.reset()
+
 }
-function newToyHandler(event){
-  event.preventDefault();
-  console.log(event);
-  let toyName = event.target.name.value;
-  let toyImage = event.target.image.value;
-  let newToy = {likes: 0, name: toyName, image: toyImage}
-  //post this info to the JSON server 
-  let newPost = fetch('http://localhost:3000/toys', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(newToy)
-  }).then(response => response.json())
-    .then(newToy => buildToyCard(newToy));
+function likeToyHandler(e){
+  
+   let toyId = e.target.dataset.id
+   let likeCount =parseInt(e.target.parentElement.querySelector('p').innerText)
+   fetch("http://localhost:3000/toys/"+toyId, {
+     method: "PATCH",
+     headers: {
+       "Content-Type":"application/json"
+      },
+      body: JSON.stringify({likes:likeCount + 1})
+   }).then(res => res.json())
+     .then(newToy =>updateLikes(newToy))
+
 }
+function updateLikes(newToy){
+  
+ let cardDiv=  document.getElementById(`${newToy.id}`)
+ card = cardDiv.querySelector('p').innerText = newToy.likes + " like(s)"
+
+  
+}
+function deleteToyHandler(e){
+  
+  toyID = e.currentTarget.dataset.id
+  fetch("http://localhost:3000/toys/"+toyID,{
+    method: "DELETE",
+  }).then(res =>res.json())
+    .then(json =>console.log(json))
+    e.currentTarget.parentElement.remove()
+
+ 
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
